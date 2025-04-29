@@ -14,6 +14,10 @@ import EditPembayaran from "./pages/EditPembayaran";
 import Pengeluaran from "./pages/Pengeluaran";
 import CreatePengeluaran from "./pages/CreatePengeluaran";
 import EditPengeluaran from "./pages/EditPengeluaran";
+import Navbar from "./components/Navbar";
+import ReportTahunan from "./pages/ReportTahunan";
+import ReportDetailBulan from "./pages/ReportDetailBulan";
+
 
 function Home() {
   const [riwayat, setRiwayat] = useState([]);
@@ -68,30 +72,34 @@ function Home() {
             </tr>
           </thead>
           <tbody>
-            {riwayat.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-100">
-                <td className="px-4 py-2 border text-center">{item.id}</td>
-                <td className="px-4 py-2 border text-center">{item.rumah_id}</td>
-                <td className="px-4 py-2 border text-center">{item.penghuni_id}</td>
-                <td className="px-4 py-2 border text-center">{item.tanggal_masuk}</td>
-                <td className="px-4 py-2 border text-center">{item.tanggal_keluar || '-'}</td>
-                <td className="px-4 py-2 border text-center">
-                <button 
-  onClick={() => navigate(`/edit-riwayat/${item.id}`)}
-  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded mr-2"
->
-                    Edit
-                  </button>
-                  <button 
-  onClick={() => handleDelete(item.id)}
-  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
->
-  Delete
-</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {riwayat.map((item) => (
+    <tr key={item.id} className="hover:bg-gray-100">
+      <td className="px-4 py-2 border text-center">{item.id}</td>
+      <td className="px-4 py-2 border text-center">
+        {item.rumah?.nomor_rumah || 'Rumah tidak ditemukan'}
+      </td>
+      <td className="px-4 py-2 border text-center">
+        {item.penghuni?.nama || 'Penghuni tidak ditemukan'}
+      </td>
+      <td className="px-4 py-2 border text-center">{item.tanggal_masuk}</td>
+      <td className="px-4 py-2 border text-center">{item.tanggal_keluar || '-'}</td>
+      <td className="px-4 py-2 border text-center">
+        <button
+          onClick={() => navigate(`/edit-riwayat/${item.id}`)}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded mr-2"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => handleDelete(item.id)}
+          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
 
         <div className="mt-6 text-center flex justify-center gap-6">
@@ -110,6 +118,7 @@ function Home() {
 export default function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create-riwayat" element={<CreateRiwayatPenghuni />} />
@@ -126,6 +135,8 @@ export default function App() {
         <Route path="/pengeluaran" element={<Pengeluaran />} />
         <Route path="/create-pengeluaran" element={<CreatePengeluaran />} />
         <Route path="/edit-pengeluaran/:id" element={<EditPengeluaran />} />  
+        <Route path="/report-tahunan" element={<ReportTahunan />} />
+  <Route path="/report-detail/:bulan" element={<ReportDetailBulan />} />
       </Routes>
     </Router>
   );

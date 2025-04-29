@@ -31,11 +31,14 @@ function Pengeluaran() {
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-gray-800">Data Pengeluaran</h1>
+      <div className="flex justify-end items-center mb-4">
+        
         <div className="bg-green-500 text-white py-2 px-4 rounded shadow-lg">
           Total Kas: Rp{totalKas.toLocaleString()}
         </div>
+      </div>
+      <div className="mb-8 mt-4 flex justify-center">
+      <h1 className="text-2xl font-bold text-gray-800">Data Pengeluaran</h1>
       </div>
 
       <div className="bg-white rounded-2xl shadow-lg p-6">
@@ -46,6 +49,7 @@ function Pengeluaran() {
               <th className="border px-4 py-2">Jumlah</th>
               <th className="border px-4 py-2">Bulan</th>
               <th className="border px-4 py-2">Tahun</th>
+              <th className="border px-4 py-2">Tanggal Pengeluaran</th>
               <th className="border px-4 py-2">Deskripsi</th>
               <th className="border px-4 py-2">Aksi</th>
             </tr>
@@ -57,6 +61,11 @@ function Pengeluaran() {
                 <td className="border px-4 py-2">Rp{item.jumlah.toLocaleString()}</td>
                 <td className="border px-4 py-2">{item.bulan}</td>
                 <td className="border px-4 py-2">{item.tahun}</td>
+                <td className="px-4 py-2 border text-center">
+  {item.tanggal_pengeluaran
+    ? new Date(item.tanggal_pengeluaran).toLocaleDateString("id-ID")
+    : "-"}
+</td>
                 <td className="border px-4 py-2">{item.deskripsi || '-'}</td>
                 <td className="border px-4 py-2">
                   <button

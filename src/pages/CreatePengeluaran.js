@@ -7,6 +7,7 @@ function CreatePengeluaran() {
     jumlah: "",
     bulan: "",
     tahun: "",
+    tanggal_pengeluaran: "",
     deskripsi: "",
   });
   const [totalKas, setTotalKas] = useState(0);
@@ -87,6 +88,13 @@ function CreatePengeluaran() {
             required
             className="w-full border p-2 rounded"
           />
+          <input
+  type="date"
+  name="tanggal_pengeluaran"
+  value={form.tanggal_pengeluaran || ""}
+  onChange={handleChange}
+  className="input-style"
+/>
           <textarea
             name="deskripsi"
             placeholder="Deskripsi (opsional)"
