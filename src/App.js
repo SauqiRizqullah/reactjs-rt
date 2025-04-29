@@ -11,6 +11,9 @@ import CreateRiwayatPenghuni from "./pages/CreateRiwayatPenghuni";
 import Pembayaran from "./pages/Pembayaran";
 import CreatePembayaran from "./pages/CreatePembayaran";
 import EditPembayaran from "./pages/EditPembayaran";
+import Pengeluaran from "./pages/Pengeluaran";
+import CreatePengeluaran from "./pages/CreatePengeluaran";
+import EditPengeluaran from "./pages/EditPengeluaran";
 
 function Home() {
   const [riwayat, setRiwayat] = useState([]);
@@ -120,6 +123,9 @@ export default function App() {
         <Route path="/pembayaran" element={<Pembayaran />} />
         <Route path="/create-pembayaran" element={<CreatePembayaran />} />
         <Route path="/edit-pembayaran/:id" element={<EditPembayaran />} />
+        <Route path="/pengeluaran" element={<Pengeluaran />} />
+        <Route path="/create-pengeluaran" element={<CreatePengeluaran />} />
+        <Route path="/edit-pengeluaran/:id" element={<EditPengeluaran />} />  
       </Routes>
     </Router>
   );
