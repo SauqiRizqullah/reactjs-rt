@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-function EditRiwayatPenghuni() {
-  const { id } = useParams();
+function CreateRiwayatPenghuni() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     rumah_id: '',
@@ -10,40 +9,23 @@ function EditRiwayatPenghuni() {
     tanggal_masuk: '',
     tanggal_keluar: '',
   });
+
   const [rumahList, setRumahList] = useState([]);
   const [penghuniList, setPenghuniList] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch data riwayat
-    const fetchRiwayat = fetch(`http://127.0.0.1:8000/api/riwayat/${id}`)
-      .then(response => response.json());
-
     // Fetch daftar rumah
-    const fetchRumah = fetch("http://127.0.0.1:8000/api/rumah")
-      .then(response => response.json());
+    fetch("http://127.0.0.1:8000/api/rumah")
+      .then((res) => res.json())
+      .then((data) => setRumahList(data))
+      .catch((err) => console.error("Error fetching rumah:", err));
 
     // Fetch daftar penghuni
-    const fetchPenghuni = fetch("http://127.0.0.1:8000/api/penghunis")
-      .then(response => response.json());
-
-    Promise.all([fetchRiwayat, fetchRumah, fetchPenghuni])
-      .then(([riwayatData, rumahData, penghuniData]) => {
-        setFormData({
-          rumah_id: riwayatData.rumah_id,
-          penghuni_id: riwayatData.penghuni_id,
-          tanggal_masuk: riwayatData.tanggal_masuk,
-          tanggal_keluar: riwayatData.tanggal_keluar || '',
-        });
-        setRumahList(rumahData);
-        setPenghuniList(penghuniData);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      });
-  }, [id]);
+    fetch("http://127.0.0.1:8000/api/penghunis")
+      .then((res) => res.json())
+      .then((data) => setPenghuniList(data))
+      .catch((err) => console.error("Error fetching penghuni:", err));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,33 +35,31 @@ function EditRiwayatPenghuni() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/riwayat/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("http://127.0.0.1:8000/api/riwayat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        alert('Data berhasil diperbarui!');
-        navigate('/');
+        alert("Riwayat berhasil ditambahkan!");
+        navigate("/"); // Balik ke Home
       } else {
         const errorData = await response.json();
-        console.error('Gagal update:', errorData);
-        alert('Gagal memperbarui data.');
+        console.error("Gagal tambah riwayat:", errorData);
+        alert("Gagal menambahkan riwayat.");
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Terjadi kesalahan.');
+      console.error("Error:", error);
+      alert("Terjadi kesalahan.");
     }
   };
 
-  if (loading) {
-    return <div className="p-6 text-center">Loading data...</div>;
-  }
-
   return (
     <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center">Edit Riwayat Penghuni</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">Tambah Riwayat Penghuni</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <select
           name="rumah_id"
@@ -130,13 +110,13 @@ function EditRiwayatPenghuni() {
 
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded"
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded"
         >
-          Simpan Perubahan
+          Simpan Riwayat
         </button>
       </form>
     </div>
   );
 }
 
-export default EditRiwayatPenghuni;
+export default CreateRiwayatPenghuni;
