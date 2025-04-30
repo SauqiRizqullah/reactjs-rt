@@ -1,6 +1,6 @@
 // src/pages/CreateRumah.js
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CreateRumah() {
@@ -10,11 +10,31 @@ function CreateRumah() {
     current_penghuni_id: "",
   });
 
+  const [penghuniList, setPenghuniList] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch daftar penghuni
+    const fetchPenghuni = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/penghunis");
+        if (response.ok) {
+          const data = await response.json();
+          setPenghuniList(data);
+        } else {
+          console.error("Gagal mengambil data penghuni");
+        }
+      } catch (error) {
+        console.error("Error saat fetch penghuni:", error);
+      }
+    };
+
+    fetchPenghuni();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({...formData, [name]: value });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -24,7 +44,7 @@ function CreateRumah() {
       const response = await fetch("http://127.0.0.1:8000/api/rumah", {
         method: "POST",
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
@@ -55,14 +75,19 @@ function CreateRumah() {
           required
         />
 
-        <input
-          type="number"
+        <select
           name="current_penghuni_id"
           value={formData.current_penghuni_id}
           onChange={handleChange}
-          placeholder="ID Penghuni (opsional)"
           className="border p-2 rounded"
-        />
+        >
+          <option value="">-- Pilih Penghuni (opsional) --</option>
+          {penghuniList.map((penghuni) => (
+            <option key={penghuni.id} value={penghuni.id}>
+              {penghuni.nama}
+            </option>
+          ))}
+        </select>
 
         <button
           type="submit"

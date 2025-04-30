@@ -10,10 +10,9 @@ function EditPembayaran() {
     bulan: '',
     tahun: '',
     jenis_iuran: '',
-    jumlah: '',
-    status_pembayaran: '',
     tanggal_bayar: '',
   });
+
   const [rumahList, setRumahList] = useState([]);
   const [penghuniList, setPenghuniList] = useState([]);
 
@@ -23,7 +22,14 @@ function EditPembayaran() {
       fetch("http://127.0.0.1:8000/api/rumah").then(res => res.json()),
       fetch("http://127.0.0.1:8000/api/penghunis").then(res => res.json())
     ]).then(([pembayaran, rumahs, penghunis]) => {
-      setFormData(pembayaran);
+      setFormData({
+        rumah_id: pembayaran.rumah_id,
+        penghuni_id: pembayaran.penghuni_id,
+        bulan: pembayaran.bulan,
+        tahun: pembayaran.tahun,
+        jenis_iuran: pembayaran.jenis_iuran,
+        tanggal_bayar: pembayaran.tanggal_bayar || '',
+      });
       setRumahList(rumahs);
       setPenghuniList(penghunis);
     });
@@ -36,15 +42,25 @@ function EditPembayaran() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const jumlah = formData.jenis_iuran === 'satpam' ? 100000 : 15000;
+    const status_pembayaran = formData.tanggal_bayar ? 'lunas' : 'belum';
+
+    const dataToSend = {
+      ...formData,
+      jumlah,
+      status_pembayaran,
+    };
+
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/pembayaran/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
       if (response.ok) {
         alert("Pembayaran berhasil diperbarui!");
-        navigate("/");
+        navigate("/pembayaran"); // Ganti dengan path halaman pembayaran
       } else {
         alert("Gagal memperbarui pembayaran.");
       }
@@ -73,13 +89,6 @@ function EditPembayaran() {
         <select name="jenis_iuran" value={formData.jenis_iuran} onChange={handleChange} className="border p-2 rounded">
           <option value="satpam">Satpam</option>
           <option value="kebersihan">Kebersihan</option>
-        </select>
-
-        <input type="number" name="jumlah" value={formData.jumlah} onChange={handleChange} className="border p-2 rounded" required />
-
-        <select name="status_pembayaran" value={formData.status_pembayaran} onChange={handleChange} className="border p-2 rounded">
-          <option value="belum">Belum Lunas</option>
-          <option value="lunas">Lunas</option>
         </select>
 
         <input type="date" name="tanggal_bayar" value={formData.tanggal_bayar || ''} onChange={handleChange} className="border p-2 rounded" />

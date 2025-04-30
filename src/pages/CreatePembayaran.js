@@ -9,8 +9,6 @@ function CreatePembayaran() {
     bulan: '',
     tahun: '',
     jenis_iuran: 'satpam',
-    jumlah: '',
-    status_pembayaran: 'belum',
     tanggal_bayar: '',
   });
 
@@ -34,15 +32,25 @@ function CreatePembayaran() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const jumlah = formData.jenis_iuran === 'satpam' ? 100000 : 15000;
+    const status_pembayaran = formData.tanggal_bayar ? 'lunas' : 'belum';
+
+    const dataToSend = {
+      ...formData,
+      jumlah,
+      status_pembayaran,
+    };
+
     try {
       const response = await fetch("http://127.0.0.1:8000/api/pembayaran", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
       if (response.ok) {
         alert("Pembayaran berhasil dibuat!");
-        navigate("/");
+        navigate("/pembayaran");
       } else {
         alert("Gagal membuat pembayaran.");
       }
@@ -71,13 +79,6 @@ function CreatePembayaran() {
         <select name="jenis_iuran" value={formData.jenis_iuran} onChange={handleChange} className="border p-2 rounded">
           <option value="satpam">Satpam</option>
           <option value="kebersihan">Kebersihan</option>
-        </select>
-
-        <input type="number" name="jumlah" placeholder="Jumlah" value={formData.jumlah} onChange={handleChange} className="border p-2 rounded" required />
-
-        <select name="status_pembayaran" value={formData.status_pembayaran} onChange={handleChange} className="border p-2 rounded">
-          <option value="belum">Belum Lunas</option>
-          <option value="lunas">Lunas</option>
         </select>
 
         <input type="date" name="tanggal_bayar" value={formData.tanggal_bayar} onChange={handleChange} className="border p-2 rounded" />

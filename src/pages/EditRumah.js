@@ -10,19 +10,53 @@ function EditRumah() {
     current_penghuni_id: "",
   });
 
+  const [penghuniList, setPenghuniList] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // Ambil data rumah & daftar penghuni saat komponen dimuat
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/rumah/${id}`)
-      .then((response) => response.json())
-      .then((data) => setFormData(data))
-      .catch((error) => console.error("Error fetching rumah:", error));
+    // Fetch data rumah
+    const fetchRumah = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/rumah/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setFormData({
+            nomor_rumah: data.nomor_rumah,
+            status_rumah: data.status_rumah || "dihuni",
+            current_penghuni_id: data.current_penghuni_id || "",
+          });
+        } else {
+          console.error("Gagal mengambil data rumah.");
+        }
+      } catch (error) {
+        console.error("Error fetching rumah:", error);
+      }
+    };
+
+    // Fetch daftar penghuni
+    const fetchPenghuni = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/penghunis");
+        if (response.ok) {
+          const data = await response.json();
+          setPenghuniList(data);
+        } else {
+          console.error("Gagal mengambil data penghuni");
+        }
+      } catch (error) {
+        console.error("Error fetching penghuni:", error);
+      }
+    };
+
+    fetchRumah();
+    fetchPenghuni();
   }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({...formData, [name]: value });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -32,7 +66,7 @@ function EditRumah() {
       const response = await fetch(`http://127.0.0.1:8000/api/rumah/${id}`, {
         method: "PUT",
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
@@ -63,14 +97,19 @@ function EditRumah() {
           required
         />
 
-        <input
-          type="number"
+        <select
           name="current_penghuni_id"
           value={formData.current_penghuni_id || ""}
           onChange={handleChange}
-          placeholder="ID Penghuni (opsional)"
           className="border p-2 rounded"
-        />
+        >
+          <option value="">-- Pilih Penghuni (opsional) --</option>
+          {penghuniList.map((penghuni) => (
+            <option key={penghuni.id} value={penghuni.id}>
+              {penghuni.nama}
+            </option>
+          ))}
+        </select>
 
         <button
           type="submit"
