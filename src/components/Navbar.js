@@ -76,7 +76,7 @@ function Navbar() {
     </Link>
   </li>
   <li>
-    <Link id="page" to="/report-tahunan" className="hover:text-slate-400 transition duration-300 ease-out">
+    <Link id="page" to="/laporan" className="hover:text-slate-400 transition duration-300 ease-out">
       Laporan
     </Link>
   </li>
@@ -101,7 +101,7 @@ function Navbar() {
     <Link onClick={toggleSidebar} to="/pengeluaran" className="block hover:text-slate-400">
       Pengeluaran
     </Link>
-    <Link onClick={toggleSidebar} to="/report-tahunan" className="block hover:text-slate-400">
+    <Link onClick={toggleSidebar} to="/laporan" className="block hover:text-slate-400">
       Laporan
     </Link>
   </div>

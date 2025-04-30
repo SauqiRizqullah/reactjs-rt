@@ -15,8 +15,7 @@ import Pengeluaran from "./pages/Pengeluaran";
 import CreatePengeluaran from "./pages/CreatePengeluaran";
 import EditPengeluaran from "./pages/EditPengeluaran";
 import Navbar from "./components/Navbar";
-import ReportTahunan from "./pages/ReportTahunan";
-import ReportDetailBulan from "./pages/ReportDetailBulan";
+import LaporanKeuangan from "./pages/LaporanKeuangan";
 
 
 function Home() {
@@ -135,8 +134,7 @@ export default function App() {
         <Route path="/pengeluaran" element={<Pengeluaran />} />
         <Route path="/create-pengeluaran" element={<CreatePengeluaran />} />
         <Route path="/edit-pengeluaran/:id" element={<EditPengeluaran />} />  
-        <Route path="/report-tahunan" element={<ReportTahunan />} />
-  <Route path="/report-detail/:bulan" element={<ReportDetailBulan />} />
+  <Route path="/laporan" element={<LaporanKeuangan />} />
       </Routes>
     </Router>
   );
